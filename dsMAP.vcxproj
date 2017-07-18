@@ -146,10 +146,12 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dsmap.hpp" />
     <ClInclude Include="mapiterator.h" />
     <ClInclude Include="pair.h" />
     <ClInclude Include="dsmap.h" />
     <ClInclude Include="rbtree.h" />
+    <ClInclude Include="rbtree.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
