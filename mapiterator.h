@@ -103,7 +103,7 @@ template <typename ValueType>
 MAPITERATOR<ValueType> & MAPITERATOR<ValueType>::operator++ (int i)
 {
   MAPITERATOR<ValueType> *it = this;
-  ++this;
+  ++(*this);
   return *it;
 }
 
