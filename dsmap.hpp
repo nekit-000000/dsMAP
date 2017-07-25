@@ -5,13 +5,13 @@
 #pragma once
 
 template <typename KeyType, typename ValueType>
-typename dsMAP<KeyType, ValueType>::iterator dsMAP<KeyType, ValueType>::end(void)
+typename dsMAP<KeyType, ValueType>::iterator dsMAP<KeyType, ValueType>::end (void)
 {
   return iterator(NULL);
 }
 
 template <typename KeyType, typename ValueType>
-typename dsMAP<KeyType, ValueType>::iterator dsMAP<KeyType, ValueType>::begin(void)
+typename dsMAP<KeyType, ValueType>::iterator dsMAP<KeyType, ValueType>::begin (void)
 {
   if (root == nil)
     return end();
@@ -37,7 +37,7 @@ ValueType & dsMAP<KeyType, ValueType>::operator[] (const KeyType & key)
 }
 
 template <typename KeyType, typename ValueType>
-int dsMAP<KeyType, ValueType>::size(void)
+int dsMAP<KeyType, ValueType>::size (void)
 {
   int cnt = 0;
   for (iterator it = begin(); it != end(); ++it)
@@ -47,13 +47,13 @@ int dsMAP<KeyType, ValueType>::size(void)
 }
 
 template <typename KeyType, typename ValueType>
-bool dsMAP<KeyType, ValueType>::empty(void)
+bool dsMAP<KeyType, ValueType>::empty (void)
 {
   return root == nil;
 }
 
 template <typename KeyType, typename ValueType>
-void dsMAP<KeyType, ValueType>::clear(void)
+void dsMAP<KeyType, ValueType>::clear (void)
 {
   NODE<elemType> * x = root;
   NODE<elemType> * y = root;
@@ -82,7 +82,7 @@ void dsMAP<KeyType, ValueType>::clear(void)
 }
 
 template <typename KeyType, typename ValueType>
-void dsMAP<KeyType, ValueType>::erase(const KeyType & key)
+void dsMAP<KeyType, ValueType>::erase (const KeyType & key)
 {
   iterator it = find(key);
 
@@ -91,7 +91,7 @@ void dsMAP<KeyType, ValueType>::erase(const KeyType & key)
 }
 
 template <typename KeyType, typename ValueType>
-typename dsMAP<KeyType, ValueType>::iterator dsMAP<KeyType, ValueType>::find(const KeyType & key)
+typename dsMAP<KeyType, ValueType>::iterator dsMAP<KeyType, ValueType>::find (const KeyType & key)
 {
   NODE<elemType> * x = root;
 
@@ -108,7 +108,7 @@ typename dsMAP<KeyType, ValueType>::iterator dsMAP<KeyType, ValueType>::find(con
 }
 
 template <typename KeyType, typename ValueType>
-PAIR<typename dsMAP<KeyType, ValueType>::iterator, bool> dsMAP<KeyType, ValueType>::insert(const elemType & val)
+PAIR<typename dsMAP<KeyType, ValueType>::iterator, bool> dsMAP<KeyType, ValueType>::insert (const elemType & val)
 {
   iterator it = find(val.first);
 
@@ -124,7 +124,7 @@ PAIR<typename dsMAP<KeyType, ValueType>::iterator, bool> dsMAP<KeyType, ValueTyp
 }
 
 template <typename KeyType, typename ValueType>
-bool dsMAP<KeyType, ValueType>::count(const KeyType &key)
+bool dsMAP<KeyType, ValueType>::count (const KeyType &key)
 {
   return find(key) == end() ? false : true;
 }

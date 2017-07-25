@@ -10,6 +10,7 @@
 template <typename KeyType, typename ValueType>
 class dsMAP : private RBTREE<PAIR<KeyType, ValueType>>
 { // map is an ordered red-black tree of {key, value} values, unique keys
+  friend class testing::Test;
 public:
   typedef PAIR<KeyType, ValueType> elemType;
   typedef MAPITERATOR<elemType> iterator;

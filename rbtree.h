@@ -32,6 +32,7 @@ class RBTREE
 {
 public:
   typedef NODE<ValueType> vertex;
+  typedef typename NODE<ValueType>::nodeColor color;
 
   RBTREE (void);
   RBTREE (const ValueType & data);
@@ -42,10 +43,12 @@ public:
   void deleteElem     (const ValueType & data);
   vertex * findNode   (const ValueType & data);
   vertex * findMin    (vertex * x);
+  color elemColor     (const ValueType & data);
+  ValueType rootData  (void) { return root->data; }
 
 protected:
-  static typename NODE<ValueType>::nodeColor black;
-  static typename NODE<ValueType>::nodeColor red;
+  static color black;
+  static color red;
 
   vertex * root;
   static vertex * nil;
@@ -58,13 +61,13 @@ protected:
 };
 
 template <typename ValueType>
-NODE<ValueType> * RBTREE<ValueType>::nil = new vertex(black, NULL, nil, nil);
-
-template <typename ValueType>
 typename NODE<ValueType>::nodeColor RBTREE<ValueType>::black = NODE<ValueType>::BLACK;
 
 template <typename ValueType>
 typename NODE<ValueType>::nodeColor RBTREE<ValueType>::red = NODE<ValueType>::RED;
+
+template <typename ValueType>
+NODE<ValueType> * RBTREE<ValueType>::nil = new vertex(black, NULL, nil, nil);
 
 #include "rbtree.hpp"
 

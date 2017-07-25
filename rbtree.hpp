@@ -27,13 +27,13 @@ NODE<ValueType>::NODE(nodeColor color, ValueType data, NODE * parent, NODE * lef
 }
 
 template <typename ValueType>
-RBTREE<ValueType>::RBTREE(void)
+RBTREE<ValueType>::RBTREE (void)
 {
   root = nil;
 }
 
 template <typename ValueType>
-RBTREE<ValueType>::RBTREE(const ValueType & data)
+RBTREE<ValueType>::RBTREE (const ValueType & data)
 {
   root = new vertex;
   root->parent = nil;
@@ -44,7 +44,7 @@ RBTREE<ValueType>::RBTREE(const ValueType & data)
 }
 
 template <typename ValueType>
-RBTREE<ValueType>::~RBTREE(void)
+RBTREE<ValueType>::~RBTREE (void)
 {
   vertex * x = root;
   vertex * y = root;
@@ -66,12 +66,10 @@ RBTREE<ValueType>::~RBTREE(void)
     delete x;
     x = y;
   }
-
-  delete nil;
 }
 
 template <typename ValueType>
-void RBTREE<ValueType>::rotateLeft(vertex * x)
+void RBTREE<ValueType>::rotateLeft (vertex * x)
 {
   if (x->right == nil)
     return;
@@ -95,7 +93,7 @@ void RBTREE<ValueType>::rotateLeft(vertex * x)
 }
 
 template <typename ValueType>
-void RBTREE<ValueType>::rotateRight(vertex * y)
+void RBTREE<ValueType>::rotateRight (vertex * y)
 {
   if (y->left == nil)
     return;
@@ -119,7 +117,7 @@ void RBTREE<ValueType>::rotateRight(vertex * y)
 }
 
 template <typename ValueType>
-void RBTREE<ValueType>::insertFixup(vertex * z)
+void RBTREE<ValueType>::insertFixup (vertex * z)
 {
   vertex * y;
 
@@ -167,7 +165,7 @@ void RBTREE<ValueType>::insertFixup(vertex * z)
 }
 
 template <typename ValueType>
-NODE<ValueType> * RBTREE<ValueType>::insertElem(const ValueType & data)
+NODE<ValueType> * RBTREE<ValueType>::insertElem (const ValueType & data)
 {
   vertex * z = new vertex(red, data, NULL, nil, nil);
   vertex * y = nil;
@@ -194,7 +192,7 @@ NODE<ValueType> * RBTREE<ValueType>::insertElem(const ValueType & data)
 }
 
 template <typename ValueType>
-void RBTREE<ValueType>::transplant(vertex * u, vertex * v)
+void RBTREE<ValueType>::transplant (vertex * u, vertex * v)
 {
   if (u->parent == nil)
     root = v;
@@ -207,9 +205,9 @@ void RBTREE<ValueType>::transplant(vertex * u, vertex * v)
 }
 
 template <typename ValueType>
-NODE<ValueType> *RBTREE<ValueType>::findNode(const ValueType & data)
+NODE<ValueType> *RBTREE<ValueType>::findNode (const ValueType & data)
 {
-  vertex *x = root;
+  vertex * x = root;
 
   while (x != nil && x->data != data) {
     if (data > x->data)
@@ -222,7 +220,7 @@ NODE<ValueType> *RBTREE<ValueType>::findNode(const ValueType & data)
 }
 
 template <typename ValueType>
-NODE<ValueType> *RBTREE<ValueType>::findMin(vertex * x)
+NODE<ValueType> *RBTREE<ValueType>::findMin (vertex * x)
 {
   vertex * y = x;
 
@@ -234,7 +232,7 @@ NODE<ValueType> *RBTREE<ValueType>::findMin(vertex * x)
 
 
 template <typename ValueType>
-void RBTREE<ValueType>::deleteFixup(vertex * x)
+void RBTREE<ValueType>::deleteFixup (vertex * x)
 {
   vertex * w;
 
@@ -299,7 +297,7 @@ void RBTREE<ValueType>::deleteFixup(vertex * x)
 }
 
 template <typename ValueType>
-void RBTREE<ValueType>::deleteElem(const ValueType & data)
+void RBTREE<ValueType>::deleteElem (const ValueType & data)
 {
   vertex * z;
   vertex * y;
@@ -343,6 +341,14 @@ void RBTREE<ValueType>::deleteElem(const ValueType & data)
   if (yOrigColor == black)
     deleteFixup(x);
   nil->parent = NULL;
+}
+
+template <typename ValueType>
+typename NODE<ValueType>::nodeColor RBTREE<ValueType>::elemColor (const ValueType & data)
+{
+  vertex * node = findNode(data);
+
+  return node->color;
 }
 
 #endif // _RBTREE_HPP_INCLUDED
