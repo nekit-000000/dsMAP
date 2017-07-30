@@ -36,3 +36,13 @@ Debug/
 
 # folder Release
 Release/
+
+.vs/dsMAP/v14/.suo
+*.log
+*.tlog
+dsMAP.vcxproj.user
+*.idb
+*.pdb
+*.db
+.vs/dsMAP/v14/.suo
+.vs/dsMAP/v14/.suo
