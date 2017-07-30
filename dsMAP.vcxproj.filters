@@ -21,9 +21,6 @@
     <ClInclude Include="dsmap.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="pair.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="mapiterator.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
