@@ -1,40 +1,43 @@
 /* START OF "dsmap.h" FILE */
 
-#ifndef _DSMAP_H_INCLUDED
-#define _DSMAP_H_INCLUDED
 #pragma once
+#ifndef _DSMAP_H
+#define _DSMAP_H
+
+#include <iostream>
 
 #include "mapiterator.h"
-#include "pair.h"
 
-template <typename KeyType, typename ValueType>
-class dsMAP : private RBTREE<PAIR<KeyType, ValueType>>
-{ // map is an ordered red-black tree of {key, value} values, unique keys
-  friend class testing::Test;
+
+template <typename KEY_TYPE, typename VALUE_TYPE>
+class dsMAP : private RBTREE<std::pair<KEY_TYPE, VALUE_TYPE>> {
+   // map is an ordered red-black tree of {key, value} values, unique keys
 public:
-  typedef PAIR<KeyType, ValueType> elemType;
-  typedef MAPITERATOR<elemType> iterator;
+   typedef std::pair<KEY_TYPE, VALUE_TYPE> ELEM_TYPE;
+   typedef MAPITERATOR<ELEM_TYPE> ITERATOR;
+   
+   dsMAP  (void) {}
+   dsMAP  (const dsMAP & map) = default;
 
-  dsMAP (void) {}
-  dsMAP (const dsMAP & map) = default;
-  ~dsMAP(void) {}
-
-  iterator begin (void);
-  iterator end (void);
-
-  ValueType & operator[] (const KeyType &key);
-
-  int size (void);
-  bool empty (void);
-  void clear (void);
-  void erase (const KeyType & key);
-  bool count (const KeyType & key);
-  iterator find (const KeyType & key);
-  PAIR<iterator, bool> insert(const elemType & val);
+   ~dsMAP (void) {}
+   
+   ITERATOR Begin (void);
+   ITERATOR End   (void);
+   
+   VALUE_TYPE & operator[] (const KEY_TYPE &key);
+   
+   int Size                    (void);
+   bool Empty                  (void);
+   void Clear                  (void);
+   void Erase                  (const KEY_TYPE & key);
+   bool Count                  (const KEY_TYPE & key);
+   ITERATOR Find               (const KEY_TYPE & key);
+   std::pair<ITERATOR, bool> Insert (const ELEM_TYPE & val);
 };
+
 
 #include "dsmap.hpp"
 
-#endif // _DSMAP_H_INCLUDED
+#endif // _DSMAP_H
 
 /* END OF "dsmap.h" FILE */

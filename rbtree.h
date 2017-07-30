@@ -1,76 +1,72 @@
 /* START OF "rbtree.h" FILE */
 
-#ifndef _RBTREE_H_INCLUDED
-#define _RBTREE_H_INCLUDED
 #pragma once
+#ifndef _RBTREE_H
+#define _RBTREE_H
 
-template <typename ValueType>
-struct NODE
-{ // element of a red-black tree
-  typedef enum
-  {
-    BLACK,
-    RED
-  } nodeColor;
-
-	nodeColor color;
-	ValueType data;
-	NODE * parent;
-	NODE * left;
-	NODE * right;
-
-  NODE (void);
-  NODE (const NODE & n);
-  NODE (nodeColor color, NODE * parent, NODE * left, NODE * right);
-  NODE (nodeColor color, ValueType data, NODE * parent, NODE * left, NODE * right);
-
-  ~NODE() {}
+enum class NODE_COLOR {
+   BLACK,
+   RED
 };
 
-template <typename ValueType>
-class RBTREE
-{
+
+template <typename VALUE_TYPE>
+struct NODE { // element of a red-black tree
+   NODE (void);
+   NODE (const NODE & n);
+   NODE (NODE_COLOR color, NODE * parent, NODE * left, NODE * right);
+   NODE (NODE_COLOR color, VALUE_TYPE data, NODE * parent, NODE * left, NODE * right);
+   
+   ~NODE (void) {}
+   
+   NODE_COLOR color;
+   VALUE_TYPE data;
+   NODE * parent;
+   NODE * left;
+   NODE * right;
+};
+
+
+template <typename VALUE_TYPE>
+class RBTREE {
 public:
-  typedef NODE<ValueType> vertex;
-  typedef typename NODE<ValueType>::nodeColor color;
+   typedef NODE<VALUE_TYPE> VERTEX;
+   typedef NODE_COLOR COLOR;
 
-  RBTREE (void);
-  RBTREE (const ValueType & data);
+   RBTREE (void);
+   RBTREE (const VALUE_TYPE & data);
 
-  virtual ~RBTREE (void);
+   ~RBTREE (void);
 
-  vertex * insertElem (const ValueType & data);
-  void deleteElem     (const ValueType & data);
-  vertex * findNode   (const ValueType & data);
-  vertex * findMin    (vertex * x);
-  color elemColor     (const ValueType & data);
-  ValueType rootData  (void) { return root->data; }
+   VERTEX * InsertElem (const VALUE_TYPE & data);
+   void DeleteElem     (const VALUE_TYPE & data);
+   COLOR ElemColor     (const VALUE_TYPE & data);
+   VALUE_TYPE RootData (void) { return root->data; }
 
 protected:
-  static color black;
-  static color red;
+   void RotateLeft   (VERTEX * x);
+   void RotateRight  (VERTEX * y);
+   void InsertFixup  (VERTEX * z);
+   void DeleteFixup  (VERTEX * x);
+   void Transplant   (VERTEX * u, VERTEX * v);
+   VERTEX * FindNode (const VALUE_TYPE & data);
+   VERTEX * FindMin  (VERTEX * x);
 
-  vertex * root;
-  static vertex * nil;
-
-  void rotateLeft  (vertex * x);
-  void rotateRight (vertex * y);
-  void insertFixup (vertex * z);
-  void deleteFixup (vertex * x);
-  void transplant  (vertex * u, vertex * v);
+   VERTEX * root;
+   static VERTEX leaf;
+   static VERTEX * nil;
 };
 
-template <typename ValueType>
-typename NODE<ValueType>::nodeColor RBTREE<ValueType>::black = NODE<ValueType>::BLACK;
 
-template <typename ValueType>
-typename NODE<ValueType>::nodeColor RBTREE<ValueType>::red = NODE<ValueType>::RED;
+template <typename VALUE_TYPE>
+NODE<VALUE_TYPE> RBTREE<VALUE_TYPE>::leaf = VERTEX(NODE_COLOR::BLACK, NULL, &leaf, &leaf);
 
-template <typename ValueType>
-NODE<ValueType> * RBTREE<ValueType>::nil = new vertex(black, NULL, nil, nil);
+template <typename VALUE_TYPE>
+NODE<VALUE_TYPE> * RBTREE<VALUE_TYPE>::nil = &RBTREE<VALUE_TYPE>::leaf;
+
 
 #include "rbtree.hpp"
 
-#endif // _RBTREE_H_INCLUDED
+#endif // _RBTREE_H
 
 /* END OF "rbtree.h" FILE */

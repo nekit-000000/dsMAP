@@ -142,12 +142,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="pair.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="tests_rbtree.cpp" />
-    <ClCompile Include="tests_dsmap.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="dsmap.hpp" />
     <ClInclude Include="mapiterator.h" />
     <ClInclude Include="pair.h" />

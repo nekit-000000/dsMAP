@@ -1,97 +1,98 @@
 /* START OF "pair.h" FILE */
 
-#ifndef _PAIR_H_INCLUDED
-#define _PAIR_H_INCLUDED
 #pragma once
+#ifndef _PAIR_H
+#define _PAIR_H
 
-template <typename KeyType, typename ValueType>
-struct PAIR
-{
-  KeyType first;
-  ValueType second;
+template <typename KEY_TYPE, typename VALUE_TYPE>
+struct PAIR {
+   PAIR(void);
+   PAIR(const PAIR &) = default;
+   PAIR(const KEY_TYPE & key, const VALUE_TYPE & value);
 
-  PAIR (void);
-  PAIR (const PAIR &) = default;
-  PAIR (const KeyType & key, const ValueType & value);
+   ~PAIR() {}
 
-  ~PAIR() {}
+   PAIR & operator= (const PAIR & right)
+   {
+      first = right.first;
+      second = right.second;
+      return *this;
+   }
 
-  PAIR & operator= (const PAIR & right)
-  {
-    first = right.first;
-    second = right.second;
-    return *this;
-  }
+   void Swap(PAIR & right);
 
-  void swap (PAIR & right);
+   KEY_TYPE first;
+   VALUE_TYPE second;
 };
 
-template <typename KeyType, typename ValueType>
-PAIR<KeyType, ValueType>::PAIR (void) :
-  first(), second()
+
+template <typename KEY_TYPE, typename VALUE_TYPE>
+PAIR<KEY_TYPE, VALUE_TYPE>::PAIR (void) :
+   first(), second()
 {
 }
 
-template <typename KeyType, typename ValueType>
-PAIR<KeyType, ValueType>::PAIR (const KeyType & key, const ValueType & value) :
-  first(key), second(value)
+template <typename KEY_TYPE, typename VALUE_TYPE>
+PAIR<KEY_TYPE, VALUE_TYPE>::PAIR (const KEY_TYPE & key, const VALUE_TYPE & value) :
+   first(key), second(value)
 {
 }
 
-template <typename KeyType, typename ValueType>
-void PAIR<KeyType, ValueType>::swap (PAIR & right)
+template <typename KEY_TYPE, typename VALUE_TYPE>
+void PAIR<KEY_TYPE, VALUE_TYPE>::Swap (PAIR & right)
 {
-  if (this != &right) {
-    Swap(&first, &right.first, sizeof(KeyType));
-    Swap(&second, &right.second, sizeof(ValueType));
-  }
+   if (this != &right) {
+      Swap(&first, &right.first, sizeof(KEY_TYPE));
+      Swap(&second, &right.second, sizeof(VALUE_TYPE));
+   }
 }
 
-template <typename KeyType, typename ValueType>
-inline bool operator== (const PAIR<KeyType, ValueType> & left,
-  const PAIR<KeyType, ValueType> & right)
+template <typename KEY_TYPE, typename VALUE_TYPE>
+inline bool operator== (const PAIR<KEY_TYPE, VALUE_TYPE> & left,
+   const PAIR<KEY_TYPE, VALUE_TYPE> & right)
 {
-  return (left.first == right.first && left.second == right.second);
+   return (left.first == right.first && left.second == right.second);
 }
 
-template <typename KeyType, typename ValueType>
-inline bool operator!= (const PAIR<KeyType, ValueType> & left,
-  const PAIR<KeyType, ValueType> & right)
+template <typename KEY_TYPE, typename VALUE_TYPE>
+inline bool operator!= (const PAIR<KEY_TYPE, VALUE_TYPE> & left,
+   const PAIR<KEY_TYPE, VALUE_TYPE> & right)
 {
-  return !(left == right);
+   return !(left == right);
 }
 
-template <typename KeyType, typename ValueType>
-inline bool operator< (const PAIR<KeyType, ValueType> & left,
-  const PAIR<KeyType, ValueType> & right)
+template <typename KEY_TYPE, typename VALUE_TYPE>
+inline bool operator< (const PAIR<KEY_TYPE, VALUE_TYPE> & left,
+   const PAIR<KEY_TYPE, VALUE_TYPE> & right)
 {
-  return (left.first < right.first ||
-    (right.first == left.first && left.second < right.second));
+   return (left.first < right.first ||
+      (right.first == left.first && left.second < right.second));
 }
 
-template <typename KeyType, typename ValueType>
-inline bool operator> (const PAIR<KeyType, ValueType> & left,
-  const PAIR<KeyType, ValueType> & right)
+template <typename KEY_TYPE, typename VALUE_TYPE>
+inline bool operator> (const PAIR<KEY_TYPE, VALUE_TYPE> & left,
+   const PAIR<KEY_TYPE, VALUE_TYPE> & right)
 {
-  return (right < left);
+   return (right < left);
 }
 
-template <typename KeyType, typename ValueType>
-inline bool operator<= (const PAIR<KeyType, ValueType> & left,
-  const PAIR<KeyType, ValueType> & right)
+template <typename KEY_TYPE, typename VALUE_TYPE>
+inline bool operator<= (const PAIR<KEY_TYPE, VALUE_TYPE> & left,
+   const PAIR<KEY_TYPE, VALUE_TYPE> & right)
 {
-  return (!(right < left));
+   return (!(right < left));
 }
 
-template <typename KeyType, typename ValueType>
-inline bool operator>=(const PAIR<KeyType, ValueType>& left,
-  const PAIR<KeyType, ValueType>& right)
+template <typename KEY_TYPE, typename VALUE_TYPE>
+inline bool operator>=(const PAIR<KEY_TYPE, VALUE_TYPE>& left,
+   const PAIR<KEY_TYPE, VALUE_TYPE>& right)
 {
-  return (!(left < right));
+   return (!(left < right));
 }
 
-void Swap (void * a, void * b, size_t size);
 
-#endif // _PAIR_H_INCLUDED
+void Swap (void * a, void * b, size_t Size);
+
+#endif // _PAIR_H
 
 /* END OF "pair.h" FILE */
