@@ -16,8 +16,8 @@ public:
    typedef std::pair<KEY_TYPE, VALUE_TYPE> ELEM_TYPE;
    typedef MAPITERATOR<ELEM_TYPE> ITERATOR;
    
-   dsMAP  (void) {}
-   dsMAP  (const dsMAP & map) = default;
+   dsMAP (void) {}
+   dsMAP (const dsMAP & map) = default;
 
    ~dsMAP (void) {}
    
@@ -26,12 +26,12 @@ public:
    
    VALUE_TYPE & operator[] (const KEY_TYPE &key);
    
-   int Size                    (void);
-   bool Empty                  (void);
-   void Clear                  (void);
-   void Erase                  (const KEY_TYPE & key);
-   bool Count                  (const KEY_TYPE & key);
-   ITERATOR Find               (const KEY_TYPE & key);
+   int Size                         (void);
+   bool Empty                       (void);
+   void Clear                       (void);
+   void Erase                       (const KEY_TYPE & key);
+   bool Count                       (const KEY_TYPE & key);
+   ITERATOR Find                    (const KEY_TYPE & key);
    std::pair<ITERATOR, bool> Insert (const ELEM_TYPE & val);
 };
 

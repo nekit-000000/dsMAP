@@ -16,7 +16,7 @@ public:
    MAPITERATOR (const MAPITERATOR & it);
    MAPITERATOR (NODE<VALUE_TYPE> * p);
 
-   ~MAPITERATOR() {}
+   ~MAPITERATOR (void) {}
 
    VALUE_TYPE operator*     (void) const;
    VALUE_TYPE * operator->  (void) const;

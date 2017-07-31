@@ -119,7 +119,7 @@ std::pair<typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR, bool> dsMAP<KEY_TYPE, 
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-bool dsMAP<KEY_TYPE, VALUE_TYPE>::Count (const KEY_TYPE &key)
+bool dsMAP<KEY_TYPE, VALUE_TYPE>::Count (const KEY_TYPE & key)
 {
    return Find(key) == End() ? false : true;
 }
