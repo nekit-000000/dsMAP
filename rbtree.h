@@ -9,16 +9,17 @@ enum class NODE_COLOR {
    RED
 };
 
-
 template <typename VALUE_TYPE>
 struct NODE { // element of a red-black tree
+public:
    NODE (void);
    NODE (const NODE & n);
    NODE (NODE_COLOR color, NODE * parent, NODE * left, NODE * right);
    NODE (NODE_COLOR color, VALUE_TYPE data, NODE * parent, NODE * left, NODE * right);
    
    ~NODE (void) {}
-   
+
+public:
    NODE_COLOR color;
    VALUE_TYPE data;
    NODE * parent;
@@ -28,30 +29,29 @@ struct NODE { // element of a red-black tree
 
 
 template <typename VALUE_TYPE>
-class RBTREE {
+class dsRB_TREE {
 public:
    typedef NODE<VALUE_TYPE> VERTEX;
    typedef NODE_COLOR COLOR;
 
-   RBTREE (void);
-   RBTREE (const VALUE_TYPE & data);
+   dsRB_TREE (void);
+   dsRB_TREE (const VALUE_TYPE & data);
 
-   ~RBTREE (void);
+   ~dsRB_TREE (void);
 
    VERTEX * InsertElem (const VALUE_TYPE & data);
    void DeleteElem     (const VALUE_TYPE & data);
-   COLOR ElemColor     (const VALUE_TYPE & data);
-   VALUE_TYPE RootData (void) { return root->data; }
+   VERTEX * FindNode   (const VALUE_TYPE & data) const;
+   VERTEX * FindMin    (VERTEX * x) const;
 
-protected:
+private:
    void RotateLeft   (VERTEX * x);
    void RotateRight  (VERTEX * y);
    void InsertFixup  (VERTEX * z);
    void DeleteFixup  (VERTEX * x);
    void Transplant   (VERTEX * u, VERTEX * v);
-   VERTEX * FindNode (const VALUE_TYPE & data);
-   VERTEX * FindMin  (VERTEX * x);
 
+protected:
    VERTEX * root;
    static VERTEX leaf;
    static VERTEX * nil;
@@ -59,10 +59,10 @@ protected:
 
 
 template <typename VALUE_TYPE>
-NODE<VALUE_TYPE> RBTREE<VALUE_TYPE>::leaf = VERTEX(NODE_COLOR::BLACK, NULL, &leaf, &leaf);
+NODE<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::leaf = VERTEX(NODE_COLOR::BLACK, NULL, &leaf, &leaf);
 
 template <typename VALUE_TYPE>
-NODE<VALUE_TYPE> * RBTREE<VALUE_TYPE>::nil = &RBTREE<VALUE_TYPE>::leaf;
+NODE<VALUE_TYPE> * dsRB_TREE<VALUE_TYPE>::nil = &dsRB_TREE<VALUE_TYPE>::leaf;
 
 
 #include "rbtree.hpp"

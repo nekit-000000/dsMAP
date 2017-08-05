@@ -5,16 +5,17 @@
 #define _DSMAP_HPP
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::End (void)
+typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::End (void) const
 {
    return ITERATOR(NULL);
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Begin (void)
+typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Begin (void) const
 {
-   if (root == nil)
+   if (root == nil) {
       return End();
+   }
    return ITERATOR(root);
 }
 
@@ -28,24 +29,26 @@ VALUE_TYPE & dsMAP<KEY_TYPE, VALUE_TYPE>::operator[] (const KEY_TYPE & key)
       ELEM_TYPE insertPair;
       insertPair.first = key;
       NODE = InsertElem(insertPair);
-   } else
+   } else {
       return it->second;
+   }
    
    return NODE->data.second;
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-int dsMAP<KEY_TYPE, VALUE_TYPE>::Size (void)
+int dsMAP<KEY_TYPE, VALUE_TYPE>::Size (void) const
 {
    int cnt = 0;
-   for (ITERATOR it = Begin(); it != End(); ++it)
+   for (ITERATOR it = Begin(); it != End(); ++it) {
       cnt++;
+   }
    
    return cnt;
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-bool dsMAP<KEY_TYPE, VALUE_TYPE>::Empty (void)
+bool dsMAP<KEY_TYPE, VALUE_TYPE>::Empty (void) const
 {
    return root == nil;
 }
@@ -58,17 +61,19 @@ void dsMAP<KEY_TYPE, VALUE_TYPE>::Clear (void)
    
    while (y != nil) {
       while (x->left != nil || x->right != nil) {
-         if (x->left == nil)
+         if (x->left == nil) {
             x = x->right;
-         else
+         } else {
             x = x->left;
+         }
       }
       y = x->parent;
       
-      if (x == x->parent->right)
+      if (x == x->parent->right) {
          x->parent->right = nil;
-      else
+      } else {
          x->parent->left = nil;
+      }
       
       delete x;
       x = y;
@@ -82,24 +87,27 @@ void dsMAP<KEY_TYPE, VALUE_TYPE>::Erase (const KEY_TYPE & key)
 {
    ITERATOR it = Find(key);
    
-   if (it != End())
+   if (it != End()) {
       DeleteElem(*it);
+   }
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find (const KEY_TYPE & key)
+typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find (const KEY_TYPE & key) const
 {
    NODE<ELEM_TYPE> * x = root;
    
    while (x->parent != NULL && x->data.first != key) {
-      if (key < x->data.first)
+      if (key < x->data.first) {
          x = x->left;
-      else
+      } else {
          x = x->right;
+      }
    }
    
-   if (x->parent == NULL)
+   if (x->parent == NULL) {
       return End();
+   }
    return ITERATOR(x);
 }
 
@@ -119,7 +127,7 @@ std::pair<typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR, bool> dsMAP<KEY_TYPE, 
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-bool dsMAP<KEY_TYPE, VALUE_TYPE>::Count (const KEY_TYPE & key)
+bool dsMAP<KEY_TYPE, VALUE_TYPE>::Count (const KEY_TYPE & key) const
 {
    return Find(key) == End() ? false : true;
 }

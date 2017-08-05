@@ -28,13 +28,13 @@ NODE<VALUE_TYPE>::NODE (NODE_COLOR color, VALUE_TYPE data, NODE * parent,
 }
 
 template <typename VALUE_TYPE>
-RBTREE<VALUE_TYPE>::RBTREE (void)
+dsRB_TREE<VALUE_TYPE>::dsRB_TREE (void)
 {
    root = nil;
 }
 
 template <typename VALUE_TYPE>
-RBTREE<VALUE_TYPE>::RBTREE (const VALUE_TYPE & data)
+dsRB_TREE<VALUE_TYPE>::dsRB_TREE (const VALUE_TYPE & data)
 {
    root = new VERTEX;
    root->parent = nil;
@@ -45,24 +45,26 @@ RBTREE<VALUE_TYPE>::RBTREE (const VALUE_TYPE & data)
 }
 
 template <typename VALUE_TYPE>
-RBTREE<VALUE_TYPE>::~RBTREE (void)
+dsRB_TREE<VALUE_TYPE>::~dsRB_TREE (void)
 {
    VERTEX * x = root;
    VERTEX * y = root;
 
    while (y != nil) {
       while (x->left != nil || x->right != nil) {
-         if (x->left == nil)
+         if (x->left == nil) {
             x = x->right;
-         else
+         } else {
             x = x->left;
+         }
       }
       y = x->parent;
 
-      if (x == x->parent->right)
+      if (x == x->parent->right) {
          x->parent->right = nil;
-      else
+      } else {
          x->parent->left = nil;
+      }
 
       delete x;
       x = y;
@@ -70,98 +72,112 @@ RBTREE<VALUE_TYPE>::~RBTREE (void)
 }
 
 template <typename VALUE_TYPE>
-void RBTREE<VALUE_TYPE>::RotateLeft (VERTEX * x)
+void dsRB_TREE<VALUE_TYPE>::RotateLeft (VERTEX * x)
 {
-   if (x->right == nil)
+   if (x->right == nil) {
       return;
+   }
 
    VERTEX * y = x->right;
 
    x->right = y->left;
 
-   if (y->left != nil)
+   if (y->left != nil) {
       y->left->parent = x;
+   }
    y->parent = x->parent;
-   if (x->parent == nil)
+
+   if (x->parent == nil) {
       root = y;
-   else if (x == x->parent->left)
+   } else if (x == x->parent->left) {
       x->parent->left = y;
-   else
+   } else {
       x->parent->right = y;
+   }
    
    y->left = x;
    x->parent = y;
 }
 
 template <typename VALUE_TYPE>
-void RBTREE<VALUE_TYPE>::RotateRight (VERTEX * y)
+void dsRB_TREE<VALUE_TYPE>::RotateRight (VERTEX * y)
 {
-   if (y->left == nil)
+   if (y->left == nil) {
       return;
+   }
    
    VERTEX * x = y->left;
    
    y->left = x->right;
    
-   if (x->right != nil)
+   if (x->right != nil) {
       x->right->parent = y;
+   }
    x->parent = y->parent;
-   if (y->parent == nil)
+
+   if (y->parent == nil) {
       root = x;
-   else if (y == y->parent->left)
+   } else if (y == y->parent->left) {
       y->parent->left = x;
-   else
+   } else {
       y->parent->right = x;
+   }
    
    x->right = y;
    y->parent = x;
 }
 
 template <typename VALUE_TYPE>
-void RBTREE<VALUE_TYPE>::InsertFixup (VERTEX * z)
+void dsRB_TREE<VALUE_TYPE>::InsertFixup (VERTEX * z)
 {
    VERTEX * y;
    
-   while (z->parent->color == COLOR::RED && z->parent->parent != nil)
+   while (z->parent->color == COLOR::RED && z->parent->parent != nil) {
       if (z->parent == z->parent->parent->left) {
          y = z->parent->parent->right;
-      
+
          if (y->color == COLOR::RED) {
             z->parent->color = COLOR::BLACK;
             y->color = COLOR::BLACK;
             z->parent->parent->color = COLOR::RED;
             z = z->parent->parent;
-         } else if (z == z->parent->right) {
+         }
+         else if (z == z->parent->right) {
             z = z->parent;
             RotateLeft(z);
-         } else {
+         }
+         else {
             z->parent->color = COLOR::BLACK;
             z->parent->parent->color = COLOR::RED;
             RotateRight(z->parent->parent);
          }
-      } else {
+      }
+      else {
          y = z->parent->parent->left;
-      
+
          if (y->color == COLOR::RED) {
             z->parent->color = COLOR::BLACK;
             y->color = COLOR::BLACK;
             z->parent->parent->color = COLOR::RED;
             z = z->parent->parent;
-         } else if (z == z->parent->left) {
+         }
+         else if (z == z->parent->left) {
             z = z->parent;
             RotateRight(z);
-         } else {
+         }
+         else {
             z->parent->color = COLOR::BLACK;
             z->parent->parent->color = COLOR::RED;
             RotateLeft(z->parent->parent);
          }
       }
+   }
    
    root->color = COLOR::BLACK;
 }
 
 template <typename VALUE_TYPE>
-NODE<VALUE_TYPE> * RBTREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
+NODE<VALUE_TYPE> * dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
 {
    VERTEX * z = new VERTEX(COLOR::RED, data, NULL, nil, nil);
    VERTEX * y = nil;
@@ -188,7 +204,7 @@ NODE<VALUE_TYPE> * RBTREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
 }
 
 template <typename VALUE_TYPE>
-void RBTREE<VALUE_TYPE>::Transplant (VERTEX * u, VERTEX * v)
+void dsRB_TREE<VALUE_TYPE>::Transplant (VERTEX * u, VERTEX * v)
 {
    if (u->parent == nil)
       root = v;
@@ -201,7 +217,7 @@ void RBTREE<VALUE_TYPE>::Transplant (VERTEX * u, VERTEX * v)
 }
 
 template <typename VALUE_TYPE>
-NODE<VALUE_TYPE> *RBTREE<VALUE_TYPE>::FindNode (const VALUE_TYPE & data)
+NODE<VALUE_TYPE> *dsRB_TREE<VALUE_TYPE>::FindNode (const VALUE_TYPE & data) const
 {
    VERTEX * x = root;
    
@@ -216,7 +232,7 @@ NODE<VALUE_TYPE> *RBTREE<VALUE_TYPE>::FindNode (const VALUE_TYPE & data)
 }
 
 template <typename VALUE_TYPE>
-NODE<VALUE_TYPE> *RBTREE<VALUE_TYPE>::FindMin (VERTEX * x)
+NODE<VALUE_TYPE> *dsRB_TREE<VALUE_TYPE>::FindMin (VERTEX * x) const
 {
    VERTEX * y = x;
    
@@ -228,7 +244,7 @@ NODE<VALUE_TYPE> *RBTREE<VALUE_TYPE>::FindMin (VERTEX * x)
 
 
 template <typename VALUE_TYPE>
-void RBTREE<VALUE_TYPE>::DeleteFixup (VERTEX * x)
+void dsRB_TREE<VALUE_TYPE>::DeleteFixup (VERTEX * x)
 {
    VERTEX * w;
    
@@ -290,14 +306,15 @@ void RBTREE<VALUE_TYPE>::DeleteFixup (VERTEX * x)
 }
 
 template <typename VALUE_TYPE>
-void RBTREE<VALUE_TYPE>::DeleteElem (const VALUE_TYPE & data)
+void dsRB_TREE<VALUE_TYPE>::DeleteElem (const VALUE_TYPE & data)
 {
    VERTEX * z;
    VERTEX * y;
    VERTEX * x;
    
-   if ((z = FindNode(data)) == nil)
+   if ((z = FindNode(data)) == nil) {
       return;
+   }
    
    y = z;
    NODE_COLOR yOrigColor = y->color;
@@ -313,9 +330,9 @@ void RBTREE<VALUE_TYPE>::DeleteElem (const VALUE_TYPE & data)
       yOrigColor = y->color;
       x = y->right;
    
-      if (y->parent == z)
+      if (y->parent == z) {
          x->parent = y;
-      else {
+      } else {
          Transplant(y, y->right);
          y->right = z->right;
          y->right->parent = y;
@@ -329,17 +346,10 @@ void RBTREE<VALUE_TYPE>::DeleteElem (const VALUE_TYPE & data)
    
    delete z;
    
-   if (yOrigColor == COLOR::BLACK)
+   if (yOrigColor == COLOR::BLACK) {
       DeleteFixup(x);
+   }
    nil->parent = NULL;
-}
-
-template <typename VALUE_TYPE>
-NODE_COLOR RBTREE<VALUE_TYPE>::ElemColor (const VALUE_TYPE & data)
-{
-   VERTEX * node = FindNode(data);
-
-   return node->color;
 }
 
 #endif // _RBTREE_HPP
