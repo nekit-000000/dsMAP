@@ -8,10 +8,9 @@
 
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP(const dsMAP<KEY_TYPE, VALUE_TYPE> & map)
+dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP (const dsMAP<KEY_TYPE, VALUE_TYPE> & map)
 {
    NODE<ELEM_TYPE> * node;
-   
    NODE<ELEM_TYPE> * mapNode = map.root;
    std::stack<NODE<ELEM_TYPE> *> mapBuff;
    std::stack<NODE<ELEM_TYPE> *> buff;
