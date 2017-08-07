@@ -4,9 +4,6 @@
 #ifndef _DSRBTREE_H
 #define _DSRBTREE_H
 
-template <typename VALUE_TYPE>
-class MAP_ITERATOR;
-
 enum class NODE_COLOR {
    BLACK,
    RED

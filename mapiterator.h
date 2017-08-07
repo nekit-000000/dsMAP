@@ -20,12 +20,12 @@ public:
 
    ~MAP_ITERATOR (void) {}
 
-   NODE operator*             (void) const;
-   VALUE_TYPE * operator->    (void) const;
-   bool operator!=            (MAP_ITERATOR const & it) const;
-   bool operator==            (MAP_ITERATOR const & it) const;
-   MAP_ITERATOR & operator++  (void);
-   MAP_ITERATOR & operator++  (int i);
+   NODE operator*            (void) const;
+   VALUE_TYPE * operator->   (void) const;
+   bool operator!=           (MAP_ITERATOR const & it) const;
+   bool operator==           (MAP_ITERATOR const & it) const;
+   MAP_ITERATOR & operator++ (void);
+   MAP_ITERATOR & operator++ (int i);
 
 private:
    NODE * p;
@@ -53,7 +53,7 @@ MAP_ITERATOR<VALUE_TYPE>::MAP_ITERATOR (const MAP_ITERATOR & it) :
 template <typename VALUE_TYPE>
 typename dsRB_TREE<VALUE_TYPE>::NODE MAP_ITERATOR<VALUE_TYPE>::operator* (void) const
 {
-   return p == NULL ? NODE<VALUE_TYPE>(NODE_COLOR::BLACK, NULL, NULL, NULL) : *p;
+   return p == NULL ? NODE(NODE_COLOR::BLACK, NULL, NULL, NULL) : *p;
 }
 
 template <typename VALUE_TYPE>
