@@ -4,6 +4,61 @@
 #ifndef _DSMAP_HPP
 #define _DSMAP_HPP
 
+#include <stack>
+
+
+template <typename KEY_TYPE, typename VALUE_TYPE>
+dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP(const dsMAP<KEY_TYPE, VALUE_TYPE> & map)
+{
+   NODE<ELEM_TYPE> * node;
+   
+   NODE<ELEM_TYPE> * mapNode = map.root;
+   std::stack<NODE<ELEM_TYPE> *> mapBuff;
+   std::stack<NODE<ELEM_TYPE> *> buff;
+
+   node = new NODE<ELEM_TYPE>;
+   node->parent = nil;
+   node->data = mapNode->data;
+   node->color = mapNode->color;
+   root = node;
+
+   while ((mapBuff.size() != 0) || mapNode != nil) {
+      if (mapNode != nil) {
+         if (mapNode->left == nil) {
+            node->left = nil;
+         } else {
+            node->left = new NODE<ELEM_TYPE>;
+            node->left->data = mapNode->left->data;
+            node->left->color = mapNode->left->color;
+            node->left->parent = node;
+         }
+
+         if (mapNode->right == nil) {
+            node->right = nil;
+         } else {
+            node->right = new NODE<ELEM_TYPE>;
+            node->right->data = mapNode->right->data;
+            node->right->color = mapNode->right->color;
+            node->right->parent = node;
+         }
+
+         if (mapNode->right != nil) {
+            mapBuff.push(mapNode->right);
+            buff.push(node->right);
+         }
+
+         mapNode = mapNode->left;
+         node = node->left;
+      } else {
+         mapNode = mapBuff.top();
+         mapBuff.pop();
+
+         node = buff.top();
+         buff.pop();
+      }
+   }
+}
+
 template <typename KEY_TYPE, typename VALUE_TYPE>
 typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::End (void) const
 {
@@ -23,17 +78,17 @@ template <typename KEY_TYPE, typename VALUE_TYPE>
 VALUE_TYPE & dsMAP<KEY_TYPE, VALUE_TYPE>::operator[] (const KEY_TYPE & key)
 {
    ITERATOR it = Find(key);
-   NODE<ELEM_TYPE> *NODE;
+   NODE<ELEM_TYPE> * node;
    
    if (it == End()) {
       ELEM_TYPE insertPair;
       insertPair.first = key;
-      NODE = InsertElem(insertPair);
+      node = InsertElem(insertPair);
    } else {
       return it->second;
    }
    
-   return NODE->data.second;
+   return node->data.second;
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>

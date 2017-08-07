@@ -17,7 +17,7 @@ public:
    typedef MAP_ITERATOR<ELEM_TYPE> ITERATOR;
    
    dsMAP (void) {}
-   dsMAP (const dsMAP & map) = default;
+   dsMAP (const dsMAP & map);
 
    ~dsMAP (void) {}
    
