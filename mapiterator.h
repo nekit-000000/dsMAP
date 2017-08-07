@@ -6,33 +6,35 @@
 
 #include <stack>
  
-#include "rbtree.h"
+#include "dsrbtree.h"
 
 
 template <typename VALUE_TYPE>
 class MAP_ITERATOR {
 public:
+   typedef typename dsRB_TREE<VALUE_TYPE>::NODE NODE;
+
    MAP_ITERATOR (void);
    MAP_ITERATOR (const MAP_ITERATOR & it);
-   MAP_ITERATOR (NODE<VALUE_TYPE> * p);
+   MAP_ITERATOR (NODE * p);
 
    ~MAP_ITERATOR (void) {}
 
-   NODE<VALUE_TYPE> operator*     (void) const;
-   VALUE_TYPE * operator->        (void) const;
-   bool operator!=                (MAP_ITERATOR const & it) const;
-   bool operator==                (MAP_ITERATOR const & it) const;
-   MAP_ITERATOR & operator++ (void);
-   MAP_ITERATOR & operator++ (int i);
+   NODE operator*             (void) const;
+   VALUE_TYPE * operator->    (void) const;
+   bool operator!=            (MAP_ITERATOR const & it) const;
+   bool operator==            (MAP_ITERATOR const & it) const;
+   MAP_ITERATOR & operator++  (void);
+   MAP_ITERATOR & operator++  (int i);
 
 private:
-   NODE<VALUE_TYPE> * p;
-   std::stack<NODE<VALUE_TYPE> *> buff;
+   NODE * p;
+   std::stack<NODE *> buff;
 };
 
 
 template <typename VALUE_TYPE>
-MAP_ITERATOR<VALUE_TYPE>::MAP_ITERATOR (NODE<VALUE_TYPE> * p) : p(p)
+MAP_ITERATOR<VALUE_TYPE>::MAP_ITERATOR (NODE * p) : p(p)
 {
 }
 
@@ -49,7 +51,7 @@ MAP_ITERATOR<VALUE_TYPE>::MAP_ITERATOR (const MAP_ITERATOR & it) :
 }
 
 template <typename VALUE_TYPE>
-NODE<VALUE_TYPE> MAP_ITERATOR<VALUE_TYPE>::operator* (void) const
+typename dsRB_TREE<VALUE_TYPE>::NODE MAP_ITERATOR<VALUE_TYPE>::operator* (void) const
 {
    return p == NULL ? NODE<VALUE_TYPE>(NODE_COLOR::BLACK, NULL, NULL, NULL) : *p;
 }
