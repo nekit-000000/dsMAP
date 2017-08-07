@@ -142,7 +142,7 @@ void dsMAP<KEY_TYPE, VALUE_TYPE>::Erase (const KEY_TYPE & key)
    ITERATOR it = Find(key);
    
    if (it != End()) {
-      DeleteElem(*it);
+      DeleteElem((*it).data);
    }
 }
 

@@ -10,8 +10,13 @@ NODE<VALUE_TYPE>::NODE (void) : data()
 }
 
 template <typename VALUE_TYPE>
-NODE<VALUE_TYPE>::NODE (const NODE & n) : NODE(n)
+NODE<VALUE_TYPE>::NODE (const NODE & n)
 {
+   color = n.color;
+   left = n.left;
+   right = n.right;
+   parent = n.parent;
+   data = n.data;
 }
 
 template <typename VALUE_TYPE>

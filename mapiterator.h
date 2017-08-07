@@ -18,7 +18,7 @@ public:
 
    ~MAP_ITERATOR (void) {}
 
-   VALUE_TYPE operator*     (void) const;
+   NODE<VALUE_TYPE> operator*     (void);
    VALUE_TYPE * operator->  (void) const;
    bool operator!=          (MAP_ITERATOR const & it) const;
    bool operator==          (MAP_ITERATOR const & it) const;
@@ -49,9 +49,9 @@ MAP_ITERATOR<VALUE_TYPE>::MAP_ITERATOR (const MAP_ITERATOR & it) :
 }
 
 template <typename VALUE_TYPE>
-VALUE_TYPE MAP_ITERATOR<VALUE_TYPE>::operator* (void) const
+NODE<VALUE_TYPE> MAP_ITERATOR<VALUE_TYPE>::operator* (void)
 {
-   return p->data;
+   return p == NULL ? NODE<VALUE_TYPE>(NODE_COLOR::BLACK, NULL, NULL, NULL) : *p;
 }
 
 template <typename VALUE_TYPE>
