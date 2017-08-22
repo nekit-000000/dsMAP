@@ -6,56 +6,56 @@
 
 #include "dsmap.h"
 
-#define MAPSIZE 100
 
-
-TEST(MapSizeTest, CorrectAfterInsertion)
-{
-   dsMAP<int, int> testMap;
-   
-   for (int i = 1; i < MAPSIZE; i++) {
-      testMap[i] = i;
-      EXPECT_EQ(i, testMap.Size());
+class MAP_TEST : public testing::Test,
+                 public testing::WithParamInterface<int> {
+   void SetUp(void)
+   {
+      size = GetParam();
+      for (int i = 0; i < size; i++) {
+         testMap[i] = i;
+      }
    }
+
+   void TearDown(void)
+   {
+   }
+
+public:
+   int size;
+   dsMAP<int, int> testMap;
+};
+
+
+TEST_P (MAP_TEST, SizeAfterInsertion)
+{
+   EXPECT_EQ(size, testMap.Size());
 }
 
-TEST(MapSizeTest, IsEmptyInitially)
+TEST (MapSizeTest, IsEmptyInitially)
 {
    dsMAP<int, int> testMap;
    EXPECT_EQ(0, testMap.Size());
 }
 
-TEST(MapSizeTest, CorrectAfterRemoval)
-{
-   dsMAP<int, int> testMap;
-   
-   for (int i = 0; i < MAPSIZE; i++) {
-      testMap[i] = i;
-   }
-   
-   for (int i = MAPSIZE - 1; i > MAPSIZE / 2; i--) {
-      testMap.Erase(i);
-      EXPECT_EQ(i, testMap.Size());
-   }
+TEST_P (MAP_TEST, SizeAfterRemoval)
+{  
+   testMap.Erase(size - 1);
+   EXPECT_EQ(size - 1, testMap.Size());
 }
 
-TEST(MapEmptyTest, IsEmptyInitially)
+TEST (MapEmptyTest, IsEmptyInitially)
 {
    dsMAP<int, int> testMap;
    EXPECT_EQ(true, testMap.Empty());
 }
 
-TEST(MapEmptyTest, NotEmptyAfterInsertion)
+TEST_P (MAP_TEST, NotEmptyAfterInsertion)
 {
-   dsMAP<int, int> testMap;
-   
-   for (int i = 0; i < MAPSIZE; i++) {
-      testMap[i] = i;
-   }
    EXPECT_EQ(false, testMap.Empty());
 }
 
-TEST(MapFindTest, CorrectIfElemDoesntExist)
+TEST (MapFindTest, IfElemDoesntExist)
 {
    dsMAP<int, int> testMap;
    
@@ -63,7 +63,7 @@ TEST(MapFindTest, CorrectIfElemDoesntExist)
    EXPECT_EQ(testMap.End(), testMap.Find(1));
 }
 
-TEST(MapFindTest, CorrectIfElemExists)
+TEST (MapFindTest, CorrectIfElemExists)
 {
    dsMAP<int, int> testMap;
    
@@ -72,68 +72,59 @@ TEST(MapFindTest, CorrectIfElemExists)
    EXPECT_EQ(testMap[0], it->second);
 }
 
-TEST(MapEraseTest, ErasesCorrectly)
+TEST_P (MAP_TEST, ErasesCorrectly)
 {
-   dsMAP<int, int> testMap;
-   
-   for (int i = 0; i < MAPSIZE; i++) {
-      testMap[i] = i;
-   }
-   
-   
-   for (int i = MAPSIZE - 1; i > MAPSIZE / 2; i--) {
+   for (int i = size - 1; i > size / 2; i--) {
       testMap.Erase(i);
       EXPECT_EQ(testMap.End(), testMap.Find(i));
    }
 }
 
-TEST(MapCountTest, CorrectIfExists)
+TEST (MapCountTest, CorrectIfExists)
 {
    dsMAP<int, int> testMap;
    
    testMap[0] = 0;
-   EXPECT_EQ(true, testMap.Count(0));
+   EXPECT_EQ(1, testMap.Count(0));
 }
 
-TEST(MapCountTest, CorrectIfDoesntExist)
+TEST (MapCountTest, CorrectIfDoesntExist)
 {
    dsMAP<int, int> testMap;
    
-   for (int i = 0; i < MAPSIZE; i++) {
-      testMap[i] = i;
-   }
-   EXPECT_EQ(false, testMap.Count(-1));
+   testMap[1] = 1;
+   EXPECT_EQ(0, testMap.Count(-1));
 }
 
-TEST(MapClearTest, CorrectIfNotEmpty)
+TEST_P (MAP_TEST, ClearTestIfNotEmpty)
 {
-   dsMAP<int, int> testMap;
-   int cnt = 0;
-   
-   for (int i = 0; i < MAPSIZE; i++) {
-      testMap[i] = i;
-   }
-   
    testMap.Clear();
-   
    EXPECT_EQ(testMap.Begin(), testMap.End());
 }
 
-TEST(MapIteratorTest, PassesAllVallues)
-{
+TEST (IteratorTest, PassesAllVallues)
+{  
    dsMAP<int, int> testMap;
-   std::map<int, int> arr;
-   
-   for (int i = 0; i < MAPSIZE; i++) {
-      testMap[i] = i;
-      arr[i] = i;
+
+   for (int i = 0; i < 1000; i++) {
+      testMap[i] = 0;
    }
-   
+
+   int iterCnt = 0;
    for (auto it = testMap.Begin(); it != testMap.End(); ++it) {
-      arr.erase(it->first);
+      it->second++;
+      iterCnt++;
    }
    
-   EXPECT_EQ(0, arr.size());
+   EXPECT_EQ(testMap.Size(), iterCnt);
+
+   for (auto it = testMap.Begin(); it != testMap.End(); ++it) {
+      EXPECT_EQ(it->second, 1);
+   }
 }
+
+INSTANTIATE_TEST_CASE_P(MapTestParameters,
+   MAP_TEST,
+   testing::Values(1, 100, 1000, 10000));
 
 /* END OF "tests_dsmap.cpp" FILE */

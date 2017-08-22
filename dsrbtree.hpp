@@ -4,33 +4,37 @@
 #ifndef _DSRBTREE_HPP
 #define _DSRBTREE_HPP
 
+
 template <typename VALUE_TYPE>
-dsRB_TREE<VALUE_TYPE>::NODE::NODE (void) : data()
+typename dsRB_TREE<VALUE_TYPE>::ITERATOR  dsRB_TREE<VALUE_TYPE>::End (void)
 {
+   return ITERATOR((NODE *)NULL);
 }
 
 template <typename VALUE_TYPE>
-dsRB_TREE<VALUE_TYPE>::NODE::NODE (const NODE & n)
+typename dsRB_TREE<VALUE_TYPE>::ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (void)
 {
-   color = n.color;
-   left = n.left;
-   right = n.right;
-   parent = n.parent;
-   data = n.data;
+   if (root == nil) {
+      return End();
+   }
+   return ITERATOR(root);
 }
 
 template <typename VALUE_TYPE>
-dsRB_TREE<VALUE_TYPE>::NODE::NODE (NODE_COLOR color, NODE * parent, NODE * left, NODE * right) :
-   color(color), parent(parent), left(left), right(right)
+typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR  dsRB_TREE<VALUE_TYPE>::End (void) const
 {
+   return CONST_ITERATOR((CONST_NODE *)NULL);
 }
 
 template <typename VALUE_TYPE>
-dsRB_TREE<VALUE_TYPE>::NODE::NODE (NODE_COLOR color, VALUE_TYPE data, NODE * parent,
-   NODE * left, NODE * right) :
-   color(color), parent(parent), left(left), right(right), data(data)
+typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (void) const
 {
+   if (root == nil) {
+      return End();
+   }
+   return CONST_ITERATOR((CONST_NODE *)root);
 }
+
 
 template <typename VALUE_TYPE>
 dsRB_TREE<VALUE_TYPE>::dsRB_TREE (void)
@@ -146,18 +150,15 @@ void dsRB_TREE<VALUE_TYPE>::InsertFixup (NODE * z)
             y->color = COLOR::BLACK;
             z->parent->parent->color = COLOR::RED;
             z = z->parent->parent;
-         }
-         else if (z == z->parent->right) {
+         } else if (z == z->parent->right) {
             z = z->parent;
             RotateLeft(z);
-         }
-         else {
+         } else {
             z->parent->color = COLOR::BLACK;
             z->parent->parent->color = COLOR::RED;
             RotateRight(z->parent->parent);
          }
-      }
-      else {
+      } else {
          y = z->parent->parent->left;
 
          if (y->color == COLOR::RED) {
@@ -165,12 +166,10 @@ void dsRB_TREE<VALUE_TYPE>::InsertFixup (NODE * z)
             y->color = COLOR::BLACK;
             z->parent->parent->color = COLOR::RED;
             z = z->parent->parent;
-         }
-         else if (z == z->parent->left) {
+         } else if (z == z->parent->left) {
             z = z->parent;
             RotateRight(z);
-         }
-         else {
+         } else {
             z->parent->color = COLOR::BLACK;
             z->parent->parent->color = COLOR::RED;
             RotateLeft(z->parent->parent);
@@ -182,68 +181,28 @@ void dsRB_TREE<VALUE_TYPE>::InsertFixup (NODE * z)
 }
 
 template <typename VALUE_TYPE>
-typename dsRB_TREE<VALUE_TYPE>::NODE * dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
-{
-   NODE * z = new NODE(COLOR::RED, data, NULL, nil, nil);
-   NODE * y = nil;
-   NODE * x = root;
-   
-   while (x != nil) {
-      y = x;
-      if (z->data < x->data)
-         x = x->left;
-      else
-         x = x->right;
-   }
-   
-   z->parent = y;
-   if (y == nil)
-      root = z;
-   else if (z->data < y->data)
-      y->left = z;
-   else
-      y->right = z;
-   
-   InsertFixup(z);
-   return z;
-}
-
-template <typename VALUE_TYPE>
 void dsRB_TREE<VALUE_TYPE>::Transplant (NODE * u, NODE * v)
 {
-   if (u->parent == nil)
+   if (u->parent == nil) {
       root = v;
-   else if (u == u->parent->left)
+   } else if (u == u->parent->left) {
       u->parent->left = v;
-   else
+   } else {
       u->parent->right = v;
+   }
    
    v->parent = u->parent;
 }
 
 template <typename VALUE_TYPE>
-typename dsRB_TREE<VALUE_TYPE>::NODE * dsRB_TREE<VALUE_TYPE>::FindNode (const VALUE_TYPE & data) const
-{
-   NODE * x = root;
-   
-   while (x != nil && x->data != data) {
-      if (data > x->data)
-         x = x->right;
-      else
-         x = x->left;
-   }
-   
-   return x;
-}
-
-template <typename VALUE_TYPE>
-typename dsRB_TREE<VALUE_TYPE>::NODE * dsRB_TREE<VALUE_TYPE>::FindMin (NODE * x) const
+typename dsRB_TREE<VALUE_TYPE>::NODE * dsRB_TREE<VALUE_TYPE>::FindMin (NODE * x)
 {
    NODE * y = x;
-   
-   while (y->left != nil)
+
+   while (y->left != nil) {
       y = y->left;
-   
+   }
+
    return y;
 }
 
@@ -311,19 +270,67 @@ void dsRB_TREE<VALUE_TYPE>::DeleteFixup (NODE * x)
 }
 
 template <typename VALUE_TYPE>
-void dsRB_TREE<VALUE_TYPE>::DeleteElem (const VALUE_TYPE & data)
+MAP_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
 {
-   NODE * z;
+   NODE * z = new NODE(COLOR::RED, data, NULL, nil, nil);
+   NODE * y = nil;
+   NODE * x = root;
+
+   while (x != nil) {
+      y = x;
+      if (z->data < x->data) {
+         x = x->left;
+      } else {
+         x = x->right;
+      }
+   }
+
+   z->parent = y;
+   if (y == nil) {
+      root = z;
+   } else if (z->data < y->data) {
+      y->left = z;
+   } else {
+      y->right = z;
+   }
+
+   InsertFixup(z);
+   return ITERATOR(z);
+}
+
+template <typename VALUE_TYPE>
+MAP_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::Find (const VALUE_TYPE & data)
+{
+   NODE * x = root;
+
+   while (x != nil && x->data != data) {
+      if (data > x->data) {
+         x = x->right;
+      } else {
+         x = x->left;
+      }
+   }
+
+   if (x == nil) {
+      return End();
+   }
+   return ITERATOR(x);
+}
+
+
+template <typename VALUE_TYPE>
+void dsRB_TREE<VALUE_TYPE>::Delete (ITERATOR & it)
+{
+   if (it == End())
+      return;
+
+   NODE * z = it.p;
    NODE * y;
    NODE * x;
-   
-   if ((z = FindNode(data)) == nil) {
-      return;
-   }
-   
+
    y = z;
    NODE_COLOR yOrigColor = y->color;
-   
+
    if (z->left == nil) {
       x = z->right;
       Transplant(z, z->right);
@@ -334,7 +341,7 @@ void dsRB_TREE<VALUE_TYPE>::DeleteElem (const VALUE_TYPE & data)
       y = FindMin(z->right);
       yOrigColor = y->color;
       x = y->right;
-   
+
       if (y->parent == z) {
          x->parent = y;
       } else {
@@ -342,19 +349,40 @@ void dsRB_TREE<VALUE_TYPE>::DeleteElem (const VALUE_TYPE & data)
          y->right = z->right;
          y->right->parent = y;
       }
-   
+
       Transplant(z, y);
       y->left = z->left;
       y->left->parent = y;
       y->color = z->color;
    }
-   
+
    delete z;
-   
+
    if (yOrigColor == COLOR::BLACK) {
       DeleteFixup(x);
    }
    nil->parent = NULL;
+}
+
+template <typename VALUE_TYPE>
+void dsRB_TREE<VALUE_TYPE>::Delete (const VALUE_TYPE & data)
+{
+   DeleteElem(FindNode(data));
+}
+
+template <typename VALUE_TYPE>
+std::pair<typename dsRB_TREE<VALUE_TYPE>::ITERATOR, bool> dsRB_TREE<VALUE_TYPE>::Insert (const VALUE_TYPE & val)
+{
+   ITERATOR it = Find(val);
+
+   if (it == End()) {
+      VALUE_TYPE insertPair;
+      insertPair = val;
+      it = InsertElem(insertPair);
+      return std::pair<ITERATOR, bool>(it, true);
+   }
+
+   return std::pair<ITERATOR, bool>(it, false);
 }
 
 #endif // _DSRBTREE_HPP

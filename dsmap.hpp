@@ -59,42 +59,24 @@ dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP (const dsMAP<KEY_TYPE, VALUE_TYPE> & map)
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::End (void) const
-{
-   return ITERATOR(NULL);
-}
-
-template <typename KEY_TYPE, typename VALUE_TYPE>
-typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Begin (void) const
-{
-   if (root == nil) {
-      return End();
-   }
-   return ITERATOR(root);
-}
-
-template <typename KEY_TYPE, typename VALUE_TYPE>
 VALUE_TYPE & dsMAP<KEY_TYPE, VALUE_TYPE>::operator[] (const KEY_TYPE & key)
 {
    ITERATOR it = Find(key);
-   NODE * node;
    
    if (it == End()) {
       ELEM_TYPE insertPair;
       insertPair.first = key;
-      node = InsertElem(insertPair);
-   } else {
-      return it->second;
+      it = Insert(insertPair).first;
    }
-   
-   return node->data.second;
+
+   return it->second;
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 int dsMAP<KEY_TYPE, VALUE_TYPE>::Size (void) const
 {
    int cnt = 0;
-   for (ITERATOR it = Begin(); it != End(); ++it) {
+   for (CONST_ITERATOR it = Begin(); it != End(); ++it) {
       cnt++;
    }
    
@@ -142,15 +124,16 @@ void dsMAP<KEY_TYPE, VALUE_TYPE>::Erase (const KEY_TYPE & key)
    ITERATOR it = Find(key);
    
    if (it != End()) {
-      DeleteElem((*it).data);
+      Delete(it);
    }
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find (const KEY_TYPE & key) const
+typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find (const KEY_TYPE & key)
 {
    NODE * x = root;
-   
+   ITERATOR it;
+
    while (x->parent != NULL && x->data.first != key) {
       if (key < x->data.first) {
          x = x->left;
@@ -166,24 +149,9 @@ typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find
 }
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-std::pair<typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR, bool> dsMAP<KEY_TYPE, VALUE_TYPE>::Insert (const ELEM_TYPE & val)
+int dsMAP<KEY_TYPE, VALUE_TYPE>::Count (const KEY_TYPE & key)
 {
-   ITERATOR it = Find(val.first);
-   
-   if (it == End()) {
-      ELEM_TYPE insertPair;
-      insertPair = val;
-      InsertElem(insertPair);
-      return std::pair<ITERATOR, bool>(End(), true);
-   }
-   
-   return std::pair<ITERATOR, bool>(it, false);
-}
-
-template <typename KEY_TYPE, typename VALUE_TYPE>
-bool dsMAP<KEY_TYPE, VALUE_TYPE>::Count (const KEY_TYPE & key) const
-{
-   return Find(key) == End() ? false : true;
+   return Find(key) == End() ? 0 : 1;
 }
 
 #endif // _DSMAP_HPP
