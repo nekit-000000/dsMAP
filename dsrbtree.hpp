@@ -67,7 +67,13 @@ typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (voi
    if (root == nil) {
       return End();
    }
-   return CONST_ITERATOR((typename dsRB_TREE<const VALUE_TYPE>::NODE *)FindMin(root));
+
+   typename dsRB_TREE<VALUE_TYPE>::NODE * pnode = root;
+   while (pnode->left != nil) {
+      pnode = pnode->left;
+   }
+   
+   return CONST_ITERATOR((typename dsRB_TREE<const VALUE_TYPE>::NODE *)pnode);
 }
 
 
