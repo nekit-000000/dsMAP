@@ -58,6 +58,7 @@ dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP (const dsMAP<KEY_TYPE, VALUE_TYPE> & map)
    }
 }
 
+
 template <typename KEY_TYPE, typename VALUE_TYPE>
 VALUE_TYPE & dsMAP<KEY_TYPE, VALUE_TYPE>::operator[] (const KEY_TYPE & key)
 {
@@ -72,22 +73,20 @@ VALUE_TYPE & dsMAP<KEY_TYPE, VALUE_TYPE>::operator[] (const KEY_TYPE & key)
    return it->second;
 }
 
+
 template <typename KEY_TYPE, typename VALUE_TYPE>
 int dsMAP<KEY_TYPE, VALUE_TYPE>::Size (void) const
 {
-   int cnt = 0;
-   for (CONST_ITERATOR it = Begin(); it != End(); ++it) {
-      cnt++;
-   }
-   
-   return cnt;
+   return size;
 }
+
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 bool dsMAP<KEY_TYPE, VALUE_TYPE>::Empty (void) const
 {
    return root == nil;
 }
+
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 void dsMAP<KEY_TYPE, VALUE_TYPE>::Clear (void)
@@ -116,7 +115,9 @@ void dsMAP<KEY_TYPE, VALUE_TYPE>::Clear (void)
    }
    
    root = nil;
+   size = 0;
 }
+
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 void dsMAP<KEY_TYPE, VALUE_TYPE>::Erase (const KEY_TYPE & key)
@@ -127,6 +128,7 @@ void dsMAP<KEY_TYPE, VALUE_TYPE>::Erase (const KEY_TYPE & key)
       Delete(it);
    }
 }
+
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find (const KEY_TYPE & key)
@@ -148,11 +150,13 @@ typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find
    return ITERATOR(x);
 }
 
+
 template <typename KEY_TYPE, typename VALUE_TYPE>
 int dsMAP<KEY_TYPE, VALUE_TYPE>::Count (const KEY_TYPE & key)
 {
    return Find(key) == End() ? 0 : 1;
 }
+
 
 #endif // _DSMAP_HPP
 

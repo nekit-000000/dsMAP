@@ -69,6 +69,7 @@ TEST_P (RB_TREE_TEST, ColorTest)
    }
 }
 
+
 /*
 This function checks if every path from a root
 to any of its descendant NIL nodes contains

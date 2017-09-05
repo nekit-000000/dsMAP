@@ -12,9 +12,9 @@ class dsMAP : public dsRB_TREE<std::pair<KEY_TYPE, VALUE_TYPE>> {
    // map is an ordered red-black tree of {key, value} values, unique keys
 public:
    typedef std::pair<KEY_TYPE, VALUE_TYPE> ELEM_TYPE;
-   typedef typename MAP_ITERATOR<ELEM_TYPE>::NODE NODE;
-   typedef MAP_ITERATOR<ELEM_TYPE> ITERATOR;
-   typedef MAP_ITERATOR<const ELEM_TYPE> CONST_ITERATOR;
+   typedef typename dsRB_TREE<ELEM_TYPE>::NODE NODE;
+   typedef RB_TREE_ITERATOR<ELEM_TYPE> ITERATOR;
+   typedef RB_TREE_ITERATOR<const ELEM_TYPE> CONST_ITERATOR;
    
    dsMAP (void) {}
    dsMAP (const dsMAP & map);

@@ -4,17 +4,39 @@
 #ifndef _DSRBTREE_H
 #define _DSRBTREE_H
 
-#include "mapiterator.h"
+#include "rbtreeiterator.h"
+
+
+enum class NODE_COLOR {
+   BLACK,
+   RED
+};
 
 
 template <typename VALUE_TYPE>
 class dsRB_TREE {
 public:
+   struct NODE { // element of a red-black tree
+   public:
+      NODE (void);
+      NODE (const NODE & n);
+      NODE (NODE_COLOR color, NODE * parent, NODE * left, NODE * right);
+      NODE (NODE_COLOR color, VALUE_TYPE data, NODE * parent, NODE * left, NODE * right);
+
+      ~NODE (void) {}
+
+   public:
+      NODE_COLOR color;
+      VALUE_TYPE data;
+      NODE * parent;
+      NODE * left;
+      NODE * right;
+   };
+
+public:
    typedef NODE_COLOR COLOR;
-   typedef typename MAP_ITERATOR<VALUE_TYPE>::NODE NODE;
-   typedef typename MAP_ITERATOR<const VALUE_TYPE>::NODE CONST_NODE;
-   typedef MAP_ITERATOR<VALUE_TYPE> ITERATOR;
-   typedef MAP_ITERATOR<const VALUE_TYPE> CONST_ITERATOR;
+   typedef RB_TREE_ITERATOR<VALUE_TYPE> ITERATOR;
+   typedef RB_TREE_ITERATOR<const VALUE_TYPE> CONST_ITERATOR;
 
    dsRB_TREE (void);
    dsRB_TREE (const VALUE_TYPE & data);
@@ -45,13 +67,15 @@ protected:
    NODE * root;
    static NODE leaf;
    static NODE * nil;
+   int size;
 };
 
-template <typename VALUE_TYPE>
-typename MAP_ITERATOR<VALUE_TYPE>::NODE dsRB_TREE<VALUE_TYPE>::leaf = NODE(NODE_COLOR::BLACK, NULL, &leaf, &leaf);
 
 template <typename VALUE_TYPE>
-typename MAP_ITERATOR<VALUE_TYPE>::NODE * dsRB_TREE<VALUE_TYPE>::nil = &dsRB_TREE<VALUE_TYPE>::leaf;
+typename dsRB_TREE<VALUE_TYPE>::NODE dsRB_TREE<VALUE_TYPE>::leaf = NODE(NODE_COLOR::BLACK, NULL, &leaf, &leaf);
+
+template <typename VALUE_TYPE>
+typename dsRB_TREE<VALUE_TYPE>::NODE * dsRB_TREE<VALUE_TYPE>::nil = &dsRB_TREE<VALUE_TYPE>::leaf;
 
 
 #include "dsrbtree.hpp"

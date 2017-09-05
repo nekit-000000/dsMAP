@@ -6,10 +6,43 @@
 
 
 template <typename VALUE_TYPE>
-typename dsRB_TREE<VALUE_TYPE>::ITERATOR  dsRB_TREE<VALUE_TYPE>::End (void)
+dsRB_TREE<VALUE_TYPE>::NODE::NODE (void) : data()
+{
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE<VALUE_TYPE>::NODE::NODE (const NODE & n)
+{
+   color = n.color;
+   left = n.left;
+   right = n.right;
+   parent = n.parent;
+   data = n.data;
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE<VALUE_TYPE>::NODE::NODE (NODE_COLOR color, NODE * parent, NODE * left, NODE * right) :
+   color(color), parent(parent), left(left), right(right)
+{
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE<VALUE_TYPE>::NODE::NODE (NODE_COLOR color, VALUE_TYPE data, NODE * parent,
+   NODE * left, NODE * right) :
+   color(color), parent(parent), left(left), right(right), data(data)
+{
+}
+
+
+template <typename VALUE_TYPE>
+typename dsRB_TREE<VALUE_TYPE>::ITERATOR dsRB_TREE<VALUE_TYPE>::End (void)
 {
    return ITERATOR((NODE *)NULL);
 }
+
 
 template <typename VALUE_TYPE>
 typename dsRB_TREE<VALUE_TYPE>::ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (void)
@@ -17,14 +50,16 @@ typename dsRB_TREE<VALUE_TYPE>::ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (void)
    if (root == nil) {
       return End();
    }
-   return ITERATOR(root);
+   return ITERATOR(FindMin(root));
 }
 
+
 template <typename VALUE_TYPE>
-typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR  dsRB_TREE<VALUE_TYPE>::End (void) const
+typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR dsRB_TREE<VALUE_TYPE>::End (void) const
 {
-   return CONST_ITERATOR((CONST_NODE *)NULL);
+   return CONST_ITERATOR((typename dsRB_TREE<const VALUE_TYPE>::NODE *)NULL);
 }
+
 
 template <typename VALUE_TYPE>
 typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (void) const
@@ -32,18 +67,18 @@ typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (voi
    if (root == nil) {
       return End();
    }
-   return CONST_ITERATOR((CONST_NODE *)root);
+   return CONST_ITERATOR((typename dsRB_TREE<const VALUE_TYPE>::NODE *)FindMin(root));
 }
 
 
 template <typename VALUE_TYPE>
-dsRB_TREE<VALUE_TYPE>::dsRB_TREE (void)
+dsRB_TREE<VALUE_TYPE>::dsRB_TREE (void) : size(0), root(nil)
 {
-   root = nil;
 }
 
+
 template <typename VALUE_TYPE>
-dsRB_TREE<VALUE_TYPE>::dsRB_TREE (const VALUE_TYPE & data)
+dsRB_TREE<VALUE_TYPE>::dsRB_TREE (const VALUE_TYPE & data) : size(1)
 {
    root = new NODE;
    root->parent = nil;
@@ -52,6 +87,7 @@ dsRB_TREE<VALUE_TYPE>::dsRB_TREE (const VALUE_TYPE & data)
    root->color = COLOR::BLACK;
    root->data = data;
 }
+
 
 template <typename VALUE_TYPE>
 dsRB_TREE<VALUE_TYPE>::~dsRB_TREE (void)
@@ -79,6 +115,7 @@ dsRB_TREE<VALUE_TYPE>::~dsRB_TREE (void)
       x = y;
    }
 }
+
 
 template <typename VALUE_TYPE>
 void dsRB_TREE<VALUE_TYPE>::RotateLeft (NODE * x)
@@ -108,6 +145,7 @@ void dsRB_TREE<VALUE_TYPE>::RotateLeft (NODE * x)
    x->parent = y;
 }
 
+
 template <typename VALUE_TYPE>
 void dsRB_TREE<VALUE_TYPE>::RotateRight (NODE * y)
 {
@@ -135,6 +173,7 @@ void dsRB_TREE<VALUE_TYPE>::RotateRight (NODE * y)
    x->right = y;
    y->parent = x;
 }
+
 
 template <typename VALUE_TYPE>
 void dsRB_TREE<VALUE_TYPE>::InsertFixup (NODE * z)
@@ -180,6 +219,7 @@ void dsRB_TREE<VALUE_TYPE>::InsertFixup (NODE * z)
    root->color = COLOR::BLACK;
 }
 
+
 template <typename VALUE_TYPE>
 void dsRB_TREE<VALUE_TYPE>::Transplant (NODE * u, NODE * v)
 {
@@ -193,6 +233,7 @@ void dsRB_TREE<VALUE_TYPE>::Transplant (NODE * u, NODE * v)
    
    v->parent = u->parent;
 }
+
 
 template <typename VALUE_TYPE>
 typename dsRB_TREE<VALUE_TYPE>::NODE * dsRB_TREE<VALUE_TYPE>::FindMin (NODE * x)
@@ -269,8 +310,9 @@ void dsRB_TREE<VALUE_TYPE>::DeleteFixup (NODE * x)
    x->color = COLOR::BLACK;
 }
 
+
 template <typename VALUE_TYPE>
-MAP_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
+RB_TREE_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
 {
    NODE * z = new NODE(COLOR::RED, data, NULL, nil, nil);
    NODE * y = nil;
@@ -298,8 +340,9 @@ MAP_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & d
    return ITERATOR(z);
 }
 
+
 template <typename VALUE_TYPE>
-MAP_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::Find (const VALUE_TYPE & data)
+RB_TREE_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::Find (const VALUE_TYPE & data)
 {
    NODE * x = root;
 
@@ -362,13 +405,16 @@ void dsRB_TREE<VALUE_TYPE>::Delete (ITERATOR & it)
       DeleteFixup(x);
    }
    nil->parent = NULL;
+   size--;
 }
+
 
 template <typename VALUE_TYPE>
 void dsRB_TREE<VALUE_TYPE>::Delete (const VALUE_TYPE & data)
 {
    DeleteElem(FindNode(data));
 }
+
 
 template <typename VALUE_TYPE>
 std::pair<typename dsRB_TREE<VALUE_TYPE>::ITERATOR, bool> dsRB_TREE<VALUE_TYPE>::Insert (const VALUE_TYPE & val)
@@ -379,11 +425,13 @@ std::pair<typename dsRB_TREE<VALUE_TYPE>::ITERATOR, bool> dsRB_TREE<VALUE_TYPE>:
       VALUE_TYPE insertPair;
       insertPair = val;
       it = InsertElem(insertPair);
-      return std::pair<ITERATOR, bool>(it, true);
+      size++;
+      return std::make_pair(it, true);
    }
 
-   return std::pair<ITERATOR, bool>(it, false);
+   return std::make_pair(it, false);
 }
+
 
 #endif // _DSRBTREE_HPP
 

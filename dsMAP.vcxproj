@@ -143,7 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dsmap.hpp" />
-    <ClInclude Include="mapiterator.h" />
+    <ClInclude Include="rbtreeiterator.h" />
     <ClInclude Include="dsmap.h" />
     <ClInclude Include="dsrbtree.h" />
     <ClInclude Include="dsrbtree.hpp" />

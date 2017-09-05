@@ -32,11 +32,13 @@ TEST_P (MAP_TEST, SizeAfterInsertion)
    EXPECT_EQ(size, testMap.Size());
 }
 
+
 TEST (MapSizeTest, IsEmptyInitially)
 {
    dsMAP<int, int> testMap;
    EXPECT_EQ(0, testMap.Size());
 }
+
 
 TEST_P (MAP_TEST, SizeAfterRemoval)
 {  
@@ -44,16 +46,19 @@ TEST_P (MAP_TEST, SizeAfterRemoval)
    EXPECT_EQ(size - 1, testMap.Size());
 }
 
+
 TEST (MapEmptyTest, IsEmptyInitially)
 {
    dsMAP<int, int> testMap;
    EXPECT_EQ(true, testMap.Empty());
 }
 
+
 TEST_P (MAP_TEST, NotEmptyAfterInsertion)
 {
    EXPECT_EQ(false, testMap.Empty());
 }
+
 
 TEST (MapFindTest, IfElemDoesntExist)
 {
@@ -62,6 +67,7 @@ TEST (MapFindTest, IfElemDoesntExist)
    testMap[0] = 0;
    EXPECT_EQ(testMap.End(), testMap.Find(1));
 }
+
 
 TEST (MapFindTest, CorrectIfElemExists)
 {
@@ -72,6 +78,7 @@ TEST (MapFindTest, CorrectIfElemExists)
    EXPECT_EQ(testMap[0], it->second);
 }
 
+
 TEST_P (MAP_TEST, ErasesCorrectly)
 {
    for (int i = size - 1; i > size / 2; i--) {
@@ -79,6 +86,7 @@ TEST_P (MAP_TEST, ErasesCorrectly)
       EXPECT_EQ(testMap.End(), testMap.Find(i));
    }
 }
+
 
 TEST (MapCountTest, CorrectIfExists)
 {
@@ -88,6 +96,7 @@ TEST (MapCountTest, CorrectIfExists)
    EXPECT_EQ(1, testMap.Count(0));
 }
 
+
 TEST (MapCountTest, CorrectIfDoesntExist)
 {
    dsMAP<int, int> testMap;
@@ -96,11 +105,13 @@ TEST (MapCountTest, CorrectIfDoesntExist)
    EXPECT_EQ(0, testMap.Count(-1));
 }
 
+
 TEST_P (MAP_TEST, ClearTestIfNotEmpty)
 {
    testMap.Clear();
    EXPECT_EQ(testMap.Begin(), testMap.End());
 }
+
 
 TEST (IteratorTest, PassesAllVallues)
 {  
@@ -122,6 +133,7 @@ TEST (IteratorTest, PassesAllVallues)
       EXPECT_EQ(it->second, 1);
    }
 }
+
 
 INSTANTIATE_TEST_CASE_P(MapTestParameters,
    MAP_TEST,
