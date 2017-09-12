@@ -8,24 +8,29 @@
 
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP(dsMAP && map)
+dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP(dsMAP && map) : dsRB_TREE<ELEM_TYPE>(std::move(map))
 {
-   root = map.root;
-   map.root = nil;
-   size = map.size;
-   map.size = 0;
+}
+
+
+template <typename KEY_TYPE, typename VALUE_TYPE>
+dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP(const dsMAP & map) : dsRB_TREE<ELEM_TYPE>(map)
+{
+}
+
+
+template <typename KEY_TYPE, typename VALUE_TYPE>
+dsMAP<KEY_TYPE, VALUE_TYPE> & dsMAP<KEY_TYPE, VALUE_TYPE>::operator= (const dsMAP & map)
+{
+   dsRB_TREE<ELEM_TYPE>::operator= (map);
+   return *this;
 }
 
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 dsMAP<KEY_TYPE, VALUE_TYPE> & dsMAP<KEY_TYPE, VALUE_TYPE>::operator= (dsMAP && map)
 {
-   Clear();
-
-   root = map.root;
-   size = map.size;
-   map.size = 0;
-   map.root = nil;
+   dsRB_TREE<ELEM_TYPE>::operator= (std::move(map));
    return *this;
 }
 

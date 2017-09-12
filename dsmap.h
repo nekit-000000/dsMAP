@@ -14,10 +14,12 @@ public:
    typedef std::pair<KEY_TYPE, VALUE_TYPE> ELEM_TYPE;
    
    dsMAP (void) {}
+   dsMAP (const dsMAP & map);
    dsMAP (dsMAP && map);
 
    ~dsMAP (void) {}
 
+   dsMAP & operator=       (const dsMAP & map);
    dsMAP & operator=       (dsMAP && map);
    VALUE_TYPE & operator[] (const KEY_TYPE & key);
 

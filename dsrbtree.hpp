@@ -145,13 +145,13 @@ void dsRB_TREE<VALUE_TYPE>::DeleteSubTree (NODE * subTree)
 {
    NODE * x = subTree;
    NODE * y = subTree;
+   NODE * parent = subTree->parent;
 
-   while (y != nil) {
+   while (y != parent) {
       while (x->left != nil || x->right != nil) {
          if (x->left == nil) {
             x = x->right;
-         }
-         else {
+         } else {
             x = x->left;
          }
       }
@@ -159,8 +159,7 @@ void dsRB_TREE<VALUE_TYPE>::DeleteSubTree (NODE * subTree)
 
       if (x == x->parent->right) {
          x->parent->right = nil;
-      }
-      else {
+      } else {
          x->parent->left = nil;
       }
 
