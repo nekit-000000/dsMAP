@@ -4,6 +4,8 @@
 #ifndef _DSRBTREE_HPP
 #define _DSRBTREE_HPP
 
+#include <stack>
+
 
 template <typename VALUE_TYPE>
 dsRB_TREE<VALUE_TYPE>::NODE::NODE (void) : data()
@@ -57,7 +59,7 @@ typename dsRB_TREE<VALUE_TYPE>::ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (void)
 template <typename VALUE_TYPE>
 typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR dsRB_TREE<VALUE_TYPE>::End (void) const
 {
-   return CONST_ITERATOR((typename dsRB_TREE<const VALUE_TYPE>::NODE *)NULL);
+   return CONST_ITERATOR((const NODE *)NULL);
 }
 
 
@@ -68,12 +70,56 @@ typename dsRB_TREE<VALUE_TYPE>::CONST_ITERATOR dsRB_TREE<VALUE_TYPE>::Begin (voi
       return End();
    }
 
-   typename dsRB_TREE<VALUE_TYPE>::NODE * pnode = root;
+   const NODE * pnode = root;
    while (pnode->left != nil) {
       pnode = pnode->left;
    }
    
-   return CONST_ITERATOR((typename dsRB_TREE<const VALUE_TYPE>::NODE *)pnode);
+   return CONST_ITERATOR(pnode);
+}
+
+
+template <typename VALUE_TYPE>
+void dsRB_TREE<VALUE_TYPE>::CopySubTree (NODE * dest, NODE * parent, const NODE * src)
+{
+   dest->parent = parent;
+   dest->data = src->data;
+   dest->color = src->color;
+
+   if (src->left != nil) {
+      dest->left = new NODE;
+      CopySubTree(dest->left, dest, src->left);
+   }
+   else {
+      dest->left = nil;
+   }
+
+   if (src->right != nil) {
+      dest->right = new NODE;
+      CopySubTree(dest->right, dest, src->right);
+   }
+   else {
+      dest->right = nil;
+   }
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE<VALUE_TYPE>::dsRB_TREE (const dsRB_TREE & tree)
+{
+   root = new NODE;
+   CopySubTree(root, nil, tree.root);
+   size = tree.size;
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE<VALUE_TYPE>::dsRB_TREE (dsRB_TREE && tree)
+{
+   root = tree.root;
+   size = tree.size;
+   tree.size = 0;
+   tree.root = nil;
 }
 
 
@@ -94,18 +140,18 @@ dsRB_TREE<VALUE_TYPE>::dsRB_TREE (const VALUE_TYPE & data) : size(1)
    root->data = data;
 }
 
-
 template <typename VALUE_TYPE>
-dsRB_TREE<VALUE_TYPE>::~dsRB_TREE (void)
+void dsRB_TREE<VALUE_TYPE>::DeleteSubTree (NODE * subTree)
 {
-   NODE * x = root;
-   NODE * y = root;
+   NODE * x = subTree;
+   NODE * y = subTree;
 
    while (y != nil) {
       while (x->left != nil || x->right != nil) {
          if (x->left == nil) {
             x = x->right;
-         } else {
+         }
+         else {
             x = x->left;
          }
       }
@@ -113,7 +159,8 @@ dsRB_TREE<VALUE_TYPE>::~dsRB_TREE (void)
 
       if (x == x->parent->right) {
          x->parent->right = nil;
-      } else {
+      }
+      else {
          x->parent->left = nil;
       }
 
@@ -122,6 +169,79 @@ dsRB_TREE<VALUE_TYPE>::~dsRB_TREE (void)
    }
 }
 
+
+template <typename VALUE_TYPE>
+dsRB_TREE<VALUE_TYPE>::~dsRB_TREE (void)
+{
+   DeleteSubTree(root);
+}
+
+
+template <typename VALUE_TYPE>
+void dsRB_TREE<VALUE_TYPE>::CopyWithoutAlloc (NODE * dest, NODE * parent, const NODE * src)
+{
+   dest->color = src->color;
+   dest->data = src->data;
+   dest->parent = parent;
+
+   if (dest->left == nil && src->left != nil) {
+      dest->left = new NODE;
+      CopySubTree(dest->left, dest, src->left);
+   } else if (src->left == nil) {
+      if (dest->left != nil) {
+         DeleteSubTree(dest->left);
+      }
+
+      dest->left = nil;
+   } else {
+      CopyWithoutAlloc(dest->left, dest, src->left);
+   }
+
+   if (dest->right == nil && src->right != nil) {
+      dest->right = new NODE;
+      CopySubTree(dest->right, dest, src->right);
+   } else if (src->right == nil) {
+      if (dest->right != nil) {
+         DeleteSubTree(dest->right);
+      }
+
+      dest->right = nil;
+   } else {
+      CopyWithoutAlloc(dest->right, dest, src->right);
+   }
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE<VALUE_TYPE> & dsRB_TREE<VALUE_TYPE>::operator= (dsRB_TREE && tree)
+{
+   DeleteSubTree(root);
+
+   root = tree.root;
+   size = tree.size;
+   tree.size = 0;
+   tree.root = nil;
+   return *this;
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE<VALUE_TYPE> & dsRB_TREE<VALUE_TYPE>::operator= (const dsRB_TREE & tree)
+{
+   if (root == tree.root) {
+      return *this;
+   }
+
+   if (root == nil) {
+      root = new NODE;
+      root->left = nil;
+      root->right = nil;
+   }
+
+   CopyWithoutAlloc(root, nil, tree.root);
+   size = tree.size;
+   return *this;
+}
 
 template <typename VALUE_TYPE>
 void dsRB_TREE<VALUE_TYPE>::RotateLeft (NODE * x)
@@ -318,7 +438,7 @@ void dsRB_TREE<VALUE_TYPE>::DeleteFixup (NODE * x)
 
 
 template <typename VALUE_TYPE>
-RB_TREE_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
+dsRB_TREE_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE & data)
 {
    NODE * z = new NODE(COLOR::RED, data, NULL, nil, nil);
    NODE * y = nil;
@@ -348,14 +468,15 @@ RB_TREE_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::InsertElem (const VALUE_TYPE
 
 
 template <typename VALUE_TYPE>
-RB_TREE_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::Find (const VALUE_TYPE & data)
+dsRB_TREE_CONST_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::Find (const VALUE_TYPE & data) const
 {
    NODE * x = root;
 
    while (x != nil && x->data != data) {
       if (data > x->data) {
          x = x->right;
-      } else {
+      }
+      else {
          x = x->left;
       }
    }
@@ -363,7 +484,7 @@ RB_TREE_ITERATOR<VALUE_TYPE> dsRB_TREE<VALUE_TYPE>::Find (const VALUE_TYPE & dat
    if (x == nil) {
       return End();
    }
-   return ITERATOR(x);
+   return CONST_ITERATOR(x);
 }
 
 
@@ -378,7 +499,7 @@ void dsRB_TREE<VALUE_TYPE>::Delete (ITERATOR & it)
    NODE * x;
 
    y = z;
-   NODE_COLOR yOrigColor = y->color;
+   COLOR yOrigColor = y->color;
 
    if (z->left == nil) {
       x = z->right;

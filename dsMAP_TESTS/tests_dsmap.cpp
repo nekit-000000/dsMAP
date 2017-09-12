@@ -129,7 +129,7 @@ TEST (IteratorTest, PassesAllVallues)
    
    EXPECT_EQ(testMap.Size(), iterCnt);
 
-   for (auto it = testMap.Begin(); it != testMap.End(); ++it) {
+   for (auto it = testMap.Begin(); it != testMap.End(); it++) {
       EXPECT_EQ(it->second, 1);
    }
 }

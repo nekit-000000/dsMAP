@@ -8,54 +8,25 @@
 
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
-dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP (const dsMAP<KEY_TYPE, VALUE_TYPE> & map)
+dsMAP<KEY_TYPE, VALUE_TYPE>::dsMAP(dsMAP && map)
 {
-   NODE * node;
-   NODE * mapNode = map.root;
-   std::stack<NODE *> mapBuff;
-   std::stack<NODE *> buff;
+   root = map.root;
+   map.root = nil;
+   size = map.size;
+   map.size = 0;
+}
 
-   node = new NODE<ELEM_TYPE>;
-   node->parent = nil;
-   node->data = mapNode->data;
-   node->color = mapNode->color;
-   root = node;
 
-   while ((mapBuff.size() != 0) || mapNode != nil) {
-      if (mapNode != nil) {
-         if (mapNode->left == nil) {
-            node->left = nil;
-         } else {
-            node->left = new NODE;
-            node->left->data = mapNode->left->data;
-            node->left->color = mapNode->left->color;
-            node->left->parent = node;
-         }
+template <typename KEY_TYPE, typename VALUE_TYPE>
+dsMAP<KEY_TYPE, VALUE_TYPE> & dsMAP<KEY_TYPE, VALUE_TYPE>::operator= (dsMAP && map)
+{
+   Clear();
 
-         if (mapNode->right == nil) {
-            node->right = nil;
-         } else {
-            node->right = new NODE;
-            node->right->data = mapNode->right->data;
-            node->right->color = mapNode->right->color;
-            node->right->parent = node;
-         }
-
-         if (mapNode->right != nil) {
-            mapBuff.push(mapNode->right);
-            buff.push(node->right);
-         }
-
-         mapNode = mapNode->left;
-         node = node->left;
-      } else {
-         mapNode = mapBuff.top();
-         mapBuff.pop();
-
-         node = buff.top();
-         buff.pop();
-      }
-   }
+   root = map.root;
+   size = map.size;
+   map.size = 0;
+   map.root = nil;
+   return *this;
 }
 
 
@@ -148,6 +119,27 @@ typename dsMAP<KEY_TYPE, VALUE_TYPE>::ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find
       return End();
    }
    return ITERATOR(x);
+}
+
+
+template <typename KEY_TYPE, typename VALUE_TYPE>
+typename dsMAP<KEY_TYPE, VALUE_TYPE>::CONST_ITERATOR dsMAP<KEY_TYPE, VALUE_TYPE>::Find (const KEY_TYPE & key) const
+{
+   const NODE * x = root;
+   CONST_ITERATOR it;
+
+   while (x->parent != NULL && x->data.first != key) {
+      if (key < x->data.first) {
+         x = x->left;
+      } else {
+         x = x->right;
+      }
+   }
+
+   if (x->parent == NULL) {
+      return End();
+   }
+   return CONST_ITERATOR(x);
 }
 
 

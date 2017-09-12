@@ -27,7 +27,10 @@
     <ClInclude Include="dsrbtree.hpp">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="rbtreeiterator.h">
+    <ClInclude Include="dsrbtreeiterator.hpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="dsrbtreeiterator.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
