@@ -12,6 +12,12 @@ dsRB_TREE_ITERATOR<VALUE_TYPE>::dsRB_TREE_ITERATOR (NODE * p) : p(p)
 
 
 template <typename VALUE_TYPE>
+dsRB_TREE_ITERATOR<VALUE_TYPE>::dsRB_TREE_ITERATOR (const dsRB_TREE_ITERATOR & it) : p(it.p)
+{
+}
+
+
+template <typename VALUE_TYPE>
 dsRB_TREE_ITERATOR<VALUE_TYPE>::dsRB_TREE_ITERATOR (const NODE * p) : p(p)
 {
 }
@@ -40,6 +46,14 @@ template <typename VALUE_TYPE>
 VALUE_TYPE * dsRB_TREE_ITERATOR<VALUE_TYPE>::operator-> (void) const
 {
    return &p->data;
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE_ITERATOR<VALUE_TYPE> & dsRB_TREE_ITERATOR<VALUE_TYPE>::operator= (const dsRB_TREE_ITERATOR & it)
+{
+   p = it.p;
+   return *this;
 }
 
 
@@ -100,6 +114,12 @@ dsRB_TREE_CONST_ITERATOR<VALUE_TYPE>::dsRB_TREE_CONST_ITERATOR (const NODE * p) 
 
 
 template <typename VALUE_TYPE>
+dsRB_TREE_CONST_ITERATOR<VALUE_TYPE>::dsRB_TREE_CONST_ITERATOR (const dsRB_TREE_CONST_ITERATOR & it) : p(it.p)
+{
+}
+
+
+template <typename VALUE_TYPE>
 dsRB_TREE_CONST_ITERATOR<VALUE_TYPE>::dsRB_TREE_CONST_ITERATOR (void) : p(NULL)
 {
 }
@@ -116,6 +136,14 @@ template <typename VALUE_TYPE>
 const VALUE_TYPE * dsRB_TREE_CONST_ITERATOR<VALUE_TYPE>::operator-> (void) const
 {
    return &p->data;
+}
+
+
+template <typename VALUE_TYPE>
+dsRB_TREE_CONST_ITERATOR<VALUE_TYPE> & dsRB_TREE_CONST_ITERATOR<VALUE_TYPE>::operator= (const dsRB_TREE_CONST_ITERATOR & it)
+{
+   p = it.p;
+   return *this;
 }
 
 
