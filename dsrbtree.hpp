@@ -143,6 +143,10 @@ dsRB_TREE<VALUE_TYPE>::dsRB_TREE (const VALUE_TYPE & data) : size(1)
 template <typename VALUE_TYPE>
 void dsRB_TREE<VALUE_TYPE>::DeleteSubTree (NODE * subTree)
 {
+   if (subTree == nil) {
+      return;
+   }
+
    NODE * x = subTree;
    NODE * y = subTree;
    NODE * parent = subTree->parent;
